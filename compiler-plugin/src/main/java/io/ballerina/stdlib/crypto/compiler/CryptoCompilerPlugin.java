@@ -19,7 +19,9 @@
 package io.ballerina.stdlib.crypto.compiler;
 
 /**
- * JWT compiler plugin.
+ * Crypto compiler plugin.
+ *
+ * @since 2.9.1
  */
 public class CryptoCompilerPlugin {
 
