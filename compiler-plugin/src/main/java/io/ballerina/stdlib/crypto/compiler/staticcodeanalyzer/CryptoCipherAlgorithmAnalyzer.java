@@ -19,6 +19,9 @@
 package io.ballerina.stdlib.crypto.compiler.staticcodeanalyzer;
 
 import io.ballerina.compiler.syntax.tree.FunctionCallExpressionNode;
+import io.ballerina.compiler.syntax.tree.ImportOrgNameNode;
+import io.ballerina.compiler.syntax.tree.ImportPrefixNode;
+import io.ballerina.compiler.syntax.tree.ModulePartNode;
 import io.ballerina.compiler.syntax.tree.QualifiedNameReferenceNode;
 import io.ballerina.projects.Document;
 import io.ballerina.projects.DocumentId;
@@ -26,6 +29,9 @@ import io.ballerina.projects.Module;
 import io.ballerina.projects.plugins.AnalysisTask;
 import io.ballerina.projects.plugins.SyntaxNodeAnalysisContext;
 import io.ballerina.scan.Reporter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Analyzes the syntax tree for function calls to crypto module functions and checks for weak cipher algorithms.
@@ -36,9 +42,13 @@ public class CryptoCipherAlgorithmAnalyzer implements AnalysisTask<SyntaxNodeAna
     private static final String CRYPTO = "crypto";
     private static final String ENCRYPT_AES_ECB = "encryptAesEcb";
     private static final String ENCRYPT_AES_CBC = "encryptAesCbc";
+    private static final String BALLERINA_ORG = "ballerina";
+
+    private Set<String> cryptoPrefixes = new HashSet<>();
 
     public CryptoCipherAlgorithmAnalyzer(Reporter reporter) {
         this.reporter = reporter;
+        this.cryptoPrefixes.add(CRYPTO);
     }
 
     /**
@@ -48,13 +58,17 @@ public class CryptoCipherAlgorithmAnalyzer implements AnalysisTask<SyntaxNodeAna
      */
     @Override
     public void perform(SyntaxNodeAnalysisContext context) {
+        analyzeImports(context);
+
         FunctionCallExpressionNode functionCall = (FunctionCallExpressionNode) context.node();
 
         if (!(functionCall.functionName() instanceof QualifiedNameReferenceNode qualifiedName)) {
             return;
         }
 
-        if (!CRYPTO.equals(qualifiedName.modulePrefix().text())) {
+        String modulePrefix = qualifiedName.modulePrefix().text();
+
+        if (!cryptoPrefixes.contains(modulePrefix)) {
             return;
         }
 
@@ -98,5 +112,31 @@ public class CryptoCipherAlgorithmAnalyzer implements AnalysisTask<SyntaxNodeAna
      */
     private static Document getDocument(Module module, DocumentId documentId) {
         return module.document(documentId);
+    }
+
+    /**
+     * Analyzes imports to identify all prefixes used for the crypto module.
+     *
+     * @param context the syntax node analysis context
+     */
+    private void analyzeImports(SyntaxNodeAnalysisContext context) {
+        Document document = getDocument(context.currentPackage().module(context.moduleId()), context.documentId());
+
+        if (document.syntaxTree().rootNode() instanceof ModulePartNode modulePartNode) {
+            modulePartNode.imports().forEach(importDeclarationNode -> {
+                ImportOrgNameNode importOrgNameNode = importDeclarationNode.orgName().orElse(null);
+
+                if (importOrgNameNode != null && BALLERINA_ORG.equals(importOrgNameNode.orgName().text())
+                        && importDeclarationNode.moduleName().stream()
+                        .anyMatch(moduleNameNode -> CRYPTO.equals(moduleNameNode.text()))) {
+
+                    ImportPrefixNode importPrefixNode = importDeclarationNode.prefix().orElse(null);
+                    String prefix = importPrefixNode != null ? importPrefixNode.prefix().text() : CRYPTO;
+
+                    cryptoPrefixes.add(prefix);
+                }
+
+            });
+        }
     }
 }
