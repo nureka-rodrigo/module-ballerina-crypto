@@ -29,6 +29,12 @@ public enum CryptoRule {
             "Encryption algorithms should be used with"
                     + " secure mode and padding scheme",
             VULNERABILITY)
+    ),
+    AVOID_FAST_HASH_ALGORITHMS(createRule(
+            2,
+            "Passwords should not be stored in plaintext"
+                    + " or with a fast hashing algorithm",
+            VULNERABILITY)
     );
 
     private final Rule rule;
