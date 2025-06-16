@@ -1,0 +1,182 @@
+[
+  {
+    "location": {
+      "filePath": "test-1.bal",
+      "startLine": 19,
+      "endLine": 19,
+      "startColumn": 0,
+      "endColumn": 6,
+      "startOffset": 713,
+      "length": 6
+    },
+    "rule": {
+      "id": "ballerina:3",
+      "numericId": 3,
+      "description": "Non isolated public function",
+      "ruleKind": "CODE_SMELL"
+    },
+    "source": "BUILT_IN",
+    "fileName": "rule4/test-1.bal",
+    "filePath": "C:\\Users\\nureka\\Documents\\GitHub\\module-ballerina-crypto\\compiler-plugin-tests\\src\\test\\resources\\static_code_analyzer\\ballerina_packages\\rule4\\test-1.bal"
+  },
+  {
+    "location": {
+      "filePath": "test-2.bal",
+      "startLine": 19,
+      "endLine": 19,
+      "startColumn": 0,
+      "endColumn": 6,
+      "startOffset": 718,
+      "length": 6
+    },
+    "rule": {
+      "id": "ballerina:3",
+      "numericId": 3,
+      "description": "Non isolated public function",
+      "ruleKind": "CODE_SMELL"
+    },
+    "source": "BUILT_IN",
+    "fileName": "rule4/test-2.bal",
+    "filePath": "C:\\Users\\nureka\\Documents\\GitHub\\module-ballerina-crypto\\compiler-plugin-tests\\src\\test\\resources\\static_code_analyzer\\ballerina_packages\\rule4\\test-2.bal"
+  },
+  {
+    "location": {
+      "filePath": "test-3.bal",
+      "startLine": 19,
+      "endLine": 19,
+      "startColumn": 0,
+      "endColumn": 6,
+      "startOffset": 713,
+      "length": 6
+    },
+    "rule": {
+      "id": "ballerina:3",
+      "numericId": 3,
+      "description": "Non isolated public function",
+      "ruleKind": "CODE_SMELL"
+    },
+    "source": "BUILT_IN",
+    "fileName": "rule4/test-3.bal",
+    "filePath": "C:\\Users\\nureka\\Documents\\GitHub\\module-ballerina-crypto\\compiler-plugin-tests\\src\\test\\resources\\static_code_analyzer\\ballerina_packages\\rule4\\test-3.bal"
+  },
+  {
+    "location": {
+      "filePath": "test-1.bal",
+      "startLine": 27,
+      "endLine": 27,
+      "startColumn": 21,
+      "endColumn": 72,
+      "startOffset": 1077,
+      "length": 51
+    },
+    "rule": {
+      "id": "ballerina/crypto:3",
+      "numericId": 3,
+      "description": "Counter Mode initialization vectors should not be reused",
+      "ruleKind": "VULNERABILITY"
+    },
+    "source": "BUILT_IN",
+    "fileName": "rule4/test-1.bal",
+    "filePath": "C:\\Users\\nureka\\Documents\\GitHub\\module-ballerina-crypto\\compiler-plugin-tests\\src\\test\\resources\\static_code_analyzer\\ballerina_packages\\rule4\\test-1.bal"
+  },
+  {
+    "location": {
+      "filePath": "test-1.bal",
+      "startLine": 27,
+      "endLine": 27,
+      "startColumn": 21,
+      "endColumn": 72,
+      "startOffset": 1077,
+      "length": 51
+    },
+    "rule": {
+      "id": "ballerina/crypto:4",
+      "numericId": 4,
+      "description": "Secure random number generators should not output predictable values",
+      "ruleKind": "VULNERABILITY"
+    },
+    "source": "BUILT_IN",
+    "fileName": "rule4/test-1.bal",
+    "filePath": "C:\\Users\\nureka\\Documents\\GitHub\\module-ballerina-crypto\\compiler-plugin-tests\\src\\test\\resources\\static_code_analyzer\\ballerina_packages\\rule4\\test-1.bal"
+  },
+  {
+    "location": {
+      "filePath": "test-2.bal",
+      "startLine": 27,
+      "endLine": 27,
+      "startColumn": 21,
+      "endColumn": 72,
+      "startOffset": 1077,
+      "length": 51
+    },
+    "rule": {
+      "id": "ballerina/crypto:3",
+      "numericId": 3,
+      "description": "Counter Mode initialization vectors should not be reused",
+      "ruleKind": "VULNERABILITY"
+    },
+    "source": "BUILT_IN",
+    "fileName": "rule4/test-2.bal",
+    "filePath": "C:\\Users\\nureka\\Documents\\GitHub\\module-ballerina-crypto\\compiler-plugin-tests\\src\\test\\resources\\static_code_analyzer\\ballerina_packages\\rule4\\test-2.bal"
+  },
+  {
+    "location": {
+      "filePath": "test-2.bal",
+      "startLine": 27,
+      "endLine": 27,
+      "startColumn": 21,
+      "endColumn": 72,
+      "startOffset": 1077,
+      "length": 51
+    },
+    "rule": {
+      "id": "ballerina/crypto:4",
+      "numericId": 4,
+      "description": "Secure random number generators should not output predictable values",
+      "ruleKind": "VULNERABILITY"
+    },
+    "source": "BUILT_IN",
+    "fileName": "rule4/test-2.bal",
+    "filePath": "C:\\Users\\nureka\\Documents\\GitHub\\module-ballerina-crypto\\compiler-plugin-tests\\src\\test\\resources\\static_code_analyzer\\ballerina_packages\\rule4\\test-2.bal"
+  },
+  {
+    "location": {
+      "filePath": "test-3.bal",
+      "startLine": 24,
+      "endLine": 24,
+      "startColumn": 21,
+      "endColumn": 72,
+      "startOffset": 1056,
+      "length": 51
+    },
+    "rule": {
+      "id": "ballerina/crypto:3",
+      "numericId": 3,
+      "description": "Counter Mode initialization vectors should not be reused",
+      "ruleKind": "VULNERABILITY"
+    },
+    "source": "BUILT_IN",
+    "fileName": "rule4/test-3.bal",
+    "filePath": "C:\\Users\\nureka\\Documents\\GitHub\\module-ballerina-crypto\\compiler-plugin-tests\\src\\test\\resources\\static_code_analyzer\\ballerina_packages\\rule4\\test-3.bal"
+  },
+  {
+    "location": {
+      "filePath": "test-3.bal",
+      "startLine": 24,
+      "endLine": 24,
+      "startColumn": 21,
+      "endColumn": 72,
+      "startOffset": 1056,
+      "length": 51
+    },
+    "rule": {
+      "id": "ballerina/crypto:4",
+      "numericId": 4,
+      "description": "Secure random number generators should not output predictable values",
+      "ruleKind": "VULNERABILITY"
+    },
+    "source": "BUILT_IN",
+    "fileName": "rule4/test-3.bal",
+    "filePath": "C:\\Users\\nureka\\Documents\\GitHub\\module-ballerina-crypto\\compiler-plugin-tests\\src\\test\\resources\\static_code_analyzer\\ballerina_packages\\rule4\\test-3.bal"
+  }
+]

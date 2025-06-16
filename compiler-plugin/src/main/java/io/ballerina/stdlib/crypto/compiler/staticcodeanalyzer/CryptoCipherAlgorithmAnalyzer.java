@@ -47,11 +47,14 @@ public class CryptoCipherAlgorithmAnalyzer implements AnalysisTask<SyntaxNodeAna
     private final Reporter reporter;
     private static final String BALLERINA_ORG = "ballerina";
     private static final String CRYPTO = "crypto";
+    private static final String RANDOM = "random";
     private final Set<String> cryptoPrefixes = new HashSet<>();
+    private final Set<String> randomPrefixes = new HashSet<>();
 
     public CryptoCipherAlgorithmAnalyzer(Reporter reporter) {
         this.reporter = reporter;
         this.cryptoPrefixes.add(CRYPTO);
+        this.randomPrefixes.add(RANDOM);
     }
 
     /**
@@ -83,6 +86,7 @@ public class CryptoCipherAlgorithmAnalyzer implements AnalysisTask<SyntaxNodeAna
 
         if (CryptoAnalyzerUtils.requiresSecureIV(functionName)) {
             checkHardcodedIVUsage(functionCall, context);
+            checkUnsecureRandomUsage(functionCall, context);
         }
 
         if (CryptoAnalyzerUtils.HASH_BCRYPT.equals(functionName)) {
@@ -246,6 +250,41 @@ public class CryptoCipherAlgorithmAnalyzer implements AnalysisTask<SyntaxNodeAna
     }
 
     /**
+     * Checks if the AES-GCM function uses unsecure random number generation for
+     * initialization vectors.
+     * For encryptAesGcm(input, key, iv, padding, tagSize), the third parameter (iv)
+     * is checked for usage of random:createIntInRange().
+     *
+     * @param functionCall the function call node
+     * @param context      the syntax node analysis context
+     */
+    private void checkUnsecureRandomUsage(FunctionCallExpressionNode functionCall, SyntaxNodeAnalysisContext context) {
+        // Check if there are enough arguments to analyze
+        if (functionCall.arguments().stream().count() < 3) {
+            return;
+        }
+
+        Node ivArgument = functionCall.arguments().get(2);
+
+        // Check for positional arguments
+        if (ivArgument instanceof PositionalArgumentNode positional) {
+            ExpressionNode expr = positional.expression();
+            if (CryptoAnalyzerUtils.usesUnsecureRandom(expr, randomPrefixes)) {
+                report(context, CryptoRule.AVOID_USING_UNSECURE_RANDOM_NUMBER_GENERATORS.getId());
+            }
+        } else if (ivArgument instanceof NamedArgumentNode named) {
+            // Check for named arguments
+            String paramName = named.argumentName().name().text();
+            if ("iv".equals(paramName)) {
+                ExpressionNode expr = named.expression();
+                if (CryptoAnalyzerUtils.usesUnsecureRandom(expr, randomPrefixes)) {
+                    report(context, CryptoRule.AVOID_USING_UNSECURE_RANDOM_NUMBER_GENERATORS.getId());
+                }
+            }
+        }
+    }
+
+    /**
      * Reports an issue for the given context and rule ID.
      *
      * @param context the syntax node analysis context
@@ -260,7 +299,8 @@ public class CryptoCipherAlgorithmAnalyzer implements AnalysisTask<SyntaxNodeAna
     }
 
     /**
-     * Analyzes imports to identify all prefixes used for the crypto module.
+     * Analyzes imports to identify all prefixes used for the crypto and random
+     * modules.
      *
      * @param context the syntax node analysis context
      */
@@ -272,14 +312,26 @@ public class CryptoCipherAlgorithmAnalyzer implements AnalysisTask<SyntaxNodeAna
             modulePartNode.imports().forEach(importDeclarationNode -> {
                 ImportOrgNameNode importOrgNameNode = importDeclarationNode.orgName().orElse(null);
 
-                if (importOrgNameNode != null && BALLERINA_ORG.equals(importOrgNameNode.orgName().text())
-                        && importDeclarationNode.moduleName().stream()
-                                .anyMatch(moduleNameNode -> CRYPTO.equals(moduleNameNode.text()))) {
+                if (importOrgNameNode != null && BALLERINA_ORG.equals(importOrgNameNode.orgName().text())) {
+                    // Check for crypto imports
+                    if (importDeclarationNode.moduleName().stream()
+                            .anyMatch(moduleNameNode -> CRYPTO.equals(moduleNameNode.text()))) {
 
-                    ImportPrefixNode importPrefixNode = importDeclarationNode.prefix().orElse(null);
-                    String prefix = importPrefixNode != null ? importPrefixNode.prefix().text() : CRYPTO;
+                        ImportPrefixNode importPrefixNode = importDeclarationNode.prefix().orElse(null);
+                        String prefix = importPrefixNode != null ? importPrefixNode.prefix().text() : CRYPTO;
 
-                    cryptoPrefixes.add(prefix);
+                        cryptoPrefixes.add(prefix);
+                    }
+
+                    // Check for random imports
+                    if (importDeclarationNode.moduleName().stream()
+                            .anyMatch(moduleNameNode -> RANDOM.equals(moduleNameNode.text()))) {
+
+                        ImportPrefixNode importPrefixNode = importDeclarationNode.prefix().orElse(null);
+                        String prefix = importPrefixNode != null ? importPrefixNode.prefix().text() : RANDOM;
+
+                        randomPrefixes.add(prefix);
+                    }
                 }
             });
         }
